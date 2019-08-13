@@ -31,3 +31,26 @@ function liriBot(action, userRequest) {
             console.log("Please pick an action: 'spotify', 'concerts', 'movie', 'help'"); 
     }
 };
+
+function getSpotify(song) { 
+    const spotify = new Spotify(keys.spotify); 
+
+    if (!songName) { 
+        //default song
+        songName = "Under Pressure";
+    };
+    spotify.search({ type: "track", query: songName }, 
+        function (err, data) { 
+
+            spotify.request("https://api.spotify.com/v1/search?q=track:") + request + "&type=track&limit=1", function(error, response) { 
+                if (err) { 
+                    console.log(err); 
+                }
+                
+                console.log("-----------------------------------\n"); 
+                console.log("Song: " + response.tracks.items[0].name + "\nArtist: " response.tracks.items[0].artists[0].name + "\nAlbum: " + response.tracks.items[0].album.name);
+
+            });
+        }
+    )
+}
