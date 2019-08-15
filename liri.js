@@ -7,6 +7,8 @@ const axios = require('axios');
 const moment = require('moment');
 const fs = require("fs");
 
+const format = moment().format; 
+
 let action = process.argv[2];
 let userRequest = process.argv.slice(3).join(" "); 
 
@@ -32,46 +34,48 @@ function liriBot(action, userRequest) {
     }
 };
 
+liriBot(action, userRequest);
+
 function getSong() { 
     const spotify = new Spotify(keys.spotify); 
 
-    if (!songName) { 
+    if (!userRequest) { 
         //default song
-        songName = "Under Pressure";
+        userRequest = "Under Pressure";
     };
-    spotify.search({ type: "track", query: songName }, 
-        function (err, data) { 
 
-            spotify.request("https://api.spotify.com/v1/search?q=track:" + request + "&type=track&limit=1", function(error, response) { 
-                if (err) { 
-                    console.log(err); 
-                }
-                console.log("-----------------------------------\n"); 
-                console.log("Song: " + response.tracks.items[0].name + 
-                "\nArtist: " + response.tracks.items[0].artists[0].name + 
-                "\nAlbum: " + response.tracks.items[0].album.name + 
-                + "\nURL: " + response.tracks.items[0].preview_url);
-
-            });
+    spotify.request("https://api.spotify.com/v1/search?q=track:" + userRequest + "&type=track&limit=1", function(err, response) { 
+        if (err) { 
+            console.log(err); 
         }
-    );
+        
+        console.log("-----------------------------------\n"); 
+        console.log("Song: " + response.tracks.items[0].name + 
+        "\nArtist: " + response.tracks.items[0].artists[0].name + 
+        "\nAlbum: " + response.tracks.items[0].album.name + 
+        + "\nURL: " + response.tracks.items[0].preview_url);
+
+    });
 }
 
 function getConcerts() { 
     const queryURL = "https://rest.bandsintown.com/artists/" + userRequest + "/events?app_id=codingbootcamp";
 
-    axios.ger(queryURL).then(
+    axios.get(queryURL).then(
         function(response) { 
-            console.log(response); 
 
-            let concertDate = moment(response.data[0].datetime.format("MM/DD/YYYY"));
+            var concertDatetime = response.data[0].datetime;
+            var justDate = concertDatetime.slice(0,10);
             
             console.log("-----------------------------------\n"); 
-            console.log("Venue: " + response.data[0].venue.name + 
-            "\nCity: " + response.data[0].venue.city + 
-            "\nDate: " + concertDate);
+            //console.log(response.data);
+            console.log("Venue: " + response.data[0].venue.name); 
+            console.log("\nCity: " + response.data[0].venue.city); 
+            console.log("\nDate: " + justDate);
+
+            // console.log("\nDate: " + moment(concertDate.format("MM/DD/YYYY"))); 
+            // "\nEvent URL: " + response.data.url);
+
         }
     );
 }
-
-liriBot(); 
