@@ -17,7 +17,7 @@ function liriBot(action, userRequest) {
             break; 
 
         case "concerts": 
-            getArtist(userRequest); 
+            getConcerts(userRequest); 
             break; 
 
         case "movie":
@@ -32,7 +32,7 @@ function liriBot(action, userRequest) {
     }
 };
 
-function getSpotify(song) { 
+function getSong() { 
     const spotify = new Spotify(keys.spotify); 
 
     if (!songName) { 
@@ -42,15 +42,36 @@ function getSpotify(song) {
     spotify.search({ type: "track", query: songName }, 
         function (err, data) { 
 
-            spotify.request("https://api.spotify.com/v1/search?q=track:") + request + "&type=track&limit=1", function(error, response) { 
+            spotify.request("https://api.spotify.com/v1/search?q=track:" + request + "&type=track&limit=1", function(error, response) { 
                 if (err) { 
                     console.log(err); 
                 }
-                
                 console.log("-----------------------------------\n"); 
-                console.log("Song: " + response.tracks.items[0].name + "\nArtist: " response.tracks.items[0].artists[0].name + "\nAlbum: " + response.tracks.items[0].album.name);
+                console.log("Song: " + response.tracks.items[0].name + 
+                "\nArtist: " + response.tracks.items[0].artists[0].name + 
+                "\nAlbum: " + response.tracks.items[0].album.name + 
+                + "\nURL: " + response.tracks.items[0].preview_url);
 
             });
         }
-    )
+    );
 }
+
+function getConcerts() { 
+    const queryURL = "https://rest.bandsintown.com/artists/" + userRequest + "/events?app_id=codingbootcamp";
+
+    axios.ger(queryURL).then(
+        function(response) { 
+            console.log(response); 
+
+            let concertDate = moment(response.data[0].datetime.format("MM/DD/YYYY"));
+            
+            console.log("-----------------------------------\n"); 
+            console.log("Venue: " + response.data[0].venue.name + 
+            "\nCity: " + response.data[0].venue.city + 
+            "\nDate: " + concertDate);
+        }
+    );
+}
+
+liriBot(); 
