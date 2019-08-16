@@ -7,8 +7,6 @@ const axios = require('axios');
 const moment = require('moment');
 const fs = require("fs");
 
-const format = moment().format; 
-
 let action = process.argv[2];
 let userRequest = process.argv.slice(3).join(" "); 
 
@@ -27,8 +25,9 @@ function liriBot(action, userRequest) {
             break; 
         
         case "help": 
+            getHelp(userRequest);
+            break;
 
-        
         default: 
             console.log("Please pick an action: 'spotify', 'concerts', 'movie', 'help'"); 
     }
@@ -78,8 +77,6 @@ function getConcerts() {
 }
 
 function getMovie() { 
-    //const omdb = new omdb(keys.omdb);
-
 
     const queryURL ="http://www.omdbapi.com/?t=" + userRequest + "&apikey=trilogy"; 
     
@@ -87,7 +84,7 @@ function getMovie() {
         function(response) { 
 
             if (!userRequest) { 
-                //default song
+                //default movie
                 userRequest = "Mr. Nobody";
             };
 
@@ -105,5 +102,18 @@ function getMovie() {
 
         }
     );
-
 };
+
+function getHelp(){
+    fs.readFile("random.txt", "utf8", function(error, data) {
+      if (error) {
+        return console.log(error);
+      }
+        let output = data.split(",");
+  
+        action = output[0];
+        userQuery = output[1];
+          
+        liriBot(action, userQuery);
+      });
+  };
