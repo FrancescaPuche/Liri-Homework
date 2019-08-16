@@ -40,7 +40,7 @@ function getSong() {
 
     if (!userRequest) { 
         //default song
-        userRequest = "Under Pressure";
+        userRequest = "I Want It That Way";
     };
 
     spotify.request("https://api.spotify.com/v1/search?q=track:" + userRequest + "&type=track&limit=1", function(err, response) { 
