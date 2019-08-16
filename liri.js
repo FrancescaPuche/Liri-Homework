@@ -68,14 +68,42 @@ function getConcerts() {
             var justDate = concertDatetime.slice(0,10);
             
             console.log("-----------------------------------\n"); 
-            //console.log(response.data);
             console.log("Venue: " + response.data[0].venue.name); 
             console.log("\nCity: " + response.data[0].venue.city); 
             console.log("\nDate: " + justDate);
-
-            // console.log("\nDate: " + moment(concertDate.format("MM/DD/YYYY"))); 
-            // "\nEvent URL: " + response.data.url);
+            console.log("\nEvent URL: " + response.data[0].url);
 
         }
     );
 }
+
+function getMovie() { 
+    //const omdb = new omdb(keys.omdb);
+
+
+    const queryURL ="http://www.omdbapi.com/?t=" + userRequest + "&apikey=trilogy"; 
+    
+    axios.get(queryURL).then(
+        function(response) { 
+
+            if (!userRequest) { 
+                //default song
+                userRequest = "Mr. Nobody";
+            };
+
+            //console.log(response);
+            
+            console.log("-----------------------------------"); 
+            console.log("\nMovie Title: " + response.data.Title); 
+            console.log("\nYear Released: " + response.data.Year); 
+            console.log("\nIMDB Rating: " + response.data.imdbRating); 
+            console.log("\nRotten Tomatoes Score: " + response.data.Metascore); 
+            console.log("\nCountry Produced: " + response.data.Country); 
+            console.log("\nLanguages: " + response.data.Language); 
+            console.log("\nShort Plot: " + response.data.Plot); 
+            console.log("\nActors: " + response.data.Actors); 
+
+        }
+    );
+
+};
