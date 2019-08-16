@@ -29,7 +29,7 @@ function liriBot(action, userRequest) {
             break;
 
         default: 
-            console.log("Please pick an action: 'spotify', 'concerts', 'movie', 'help'"); 
+            console.log("Please pick an action: spotify, concerts, movie, help"); 
     }
 };
 
@@ -48,11 +48,12 @@ function getSong() {
             console.log(err); 
         }
         
-        console.log("-----------------------------------\n"); 
-        console.log("Song: " + response.tracks.items[0].name + 
-        "\nArtist: " + response.tracks.items[0].artists[0].name + 
-        "\nAlbum: " + response.tracks.items[0].album.name + 
-        + "\nURL: " + response.tracks.items[0].preview_url);
+        console.log("-----------------------------------"); 
+        console.log("\nSong: " + response.tracks.items[0].name); + 
+        console.log("\nArtist: " + response.tracks.items[0].artists[0].name);
+        console.log("\nAlbum: " + response.tracks.items[0].album.name);
+        console.log("\nURL: " + response.tracks.items[0].preview_url);
+        console.log("-----------------------------------"); 
 
     });
 }
@@ -63,14 +64,18 @@ function getConcerts() {
     axios.get(queryURL).then(
         function(response) { 
 
-            var concertDatetime = response.data[0].datetime;
-            var justDate = concertDatetime.slice(0,10);
+            const concertDatetime = response.data[0].datetime;
+            const concertDate = concertDatetime.slice(0,10);
+            const dateFormat = moment(concertDate, "YYYY-MM-DD");
+            const newFormat = dateFormat.format("MM-DD-YYYY");
+
             
             console.log("-----------------------------------\n"); 
             console.log("Venue: " + response.data[0].venue.name); 
             console.log("\nCity: " + response.data[0].venue.city); 
-            console.log("\nDate: " + justDate);
+            console.log("\nDate: " + newFormat);
             console.log("\nEvent URL: " + response.data[0].url);
+            console.log("-----------------------------------"); 
 
         }
     );
@@ -99,6 +104,7 @@ function getMovie() {
             console.log("\nLanguages: " + response.data.Language); 
             console.log("\nShort Plot: " + response.data.Plot); 
             console.log("\nActors: " + response.data.Actors); 
+            console.log("-----------------------------------"); 
 
         }
     );
@@ -111,9 +117,11 @@ function getHelp(){
       }
         let output = data.split(",");
   
-        action = output[0];
+        let action = output[0];
         userQuery = output[1];
-          
+
+        console.log(action);
+        
         liriBot(action, userQuery);
       });
   };
